@@ -7,13 +7,19 @@ import SpotlightCard from "@/components/SpotlightCard";
 
 // my components
 import Chat from "./project_manager/chat";
+import Sidebar from "./project_manager/sidebar";
+import ContainerModal from "./project_manager/modal_container";
+import NewProject from "./project_manager/modal_new_project";
+
+
+// types
 import type {
   project_content,
   all_projects,
   project,
 } from "../types/project.types";
-import Sidebar from "./project_manager/sidebar";
-import ContainerModal from "./project_manager/container_modal";
+
+
 
 export default function ProjectManager() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -33,11 +39,28 @@ export default function ProjectManager() {
     return null;
   });
 
-  
+  // modals
   const [containerModalOpen, setContainerModalOpen] = useState<boolean>(false);
-  // specific content inside a project 
+  const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
+
+
+  // specific content inside a project
   const [active_project_content, set_active_project_content] = useState<project_content | null>(null);
 
+
+  const handleUpdateProjects = () => {
+    const savedProjects = JSON.parse(localStorage.getItem("RileyProjects") || "[]");
+    if (savedProjects) {
+      console.log('updated successfully')
+      set_all_projects(savedProjects)      
+      set_active_project(savedProjects[0])
+    }
+  }
+
+  
+
+
+  
   return (
     <div className="relative w-screen h-screen overflow-hidden bg-gray-950">
       {/* Base dark background added to ensure contrast if Dither is transparent */}
@@ -96,7 +119,11 @@ export default function ProjectManager() {
             </button>
 
             {/* New Project Button */}
-            <button className="px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 group flex items-center gap-2 border border-white/10">
+            <button className="px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 group flex items-center gap-2 border border-white/10"
+              onClick={() => {
+                setNewProjectModalOpen(true)
+              }}
+            >
               <Plus className="w-5 h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
               <span className="text-white font-medium tracking-wide hidden sm:inline">
                 New Project
@@ -157,6 +184,15 @@ export default function ProjectManager() {
             <ContainerModal project={active_project_content} onClose={() => {
               setContainerModalOpen(false)
             }}/>
+          )}
+          {newProjectModalOpen && (
+            <NewProject onClose={() => {
+              handleUpdateProjects()
+              setNewProjectModalOpen(false)
+            }}
+            projects={all_projects}
+            active_project={active_project}
+            />
           )}
           <Chat />
         </div>

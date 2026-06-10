@@ -5,6 +5,7 @@ export interface all_projects{
 
 // about a specific project/ container 
 export interface project {
+  id: number;
   title: string;
   description: string;
   created_at: string;
@@ -19,6 +20,7 @@ export interface project_props {
 
 // project content
 export interface project_content {
+  id: number;
   title: string;
   information: string;
 }
