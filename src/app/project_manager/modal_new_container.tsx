@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import type { all_projects, project } from "../../types/project.types";
 import { X, Type, AlignLeft, FolderPlus } from "lucide-react";
 
-interface NewProjectProps {
+interface NewContainerProps {
   projects: all_projects;
   active_project: project;
   onClose: () => void;
 }
 
-export default function NewProject({ projects, active_project, onClose }: NewProjectProps) {
+export default function NewContainer({ projects, active_project, onClose }: NewContainerProps) {
   const [form, setForm] = useState({
     title: "",
     information: "",

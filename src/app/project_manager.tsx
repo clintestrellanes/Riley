@@ -9,7 +9,7 @@ import SpotlightCard from "@/components/SpotlightCard";
 import Chat from "./project_manager/chat";
 import Sidebar from "./project_manager/sidebar";
 import ContainerModal from "./project_manager/modal_container";
-import NewProject from "./project_manager/modal_new_project";
+import NewContainer from "./project_manager/modal_new_container";
 
 
 // types
@@ -41,7 +41,7 @@ export default function ProjectManager() {
 
   // modals
   const [containerModalOpen, setContainerModalOpen] = useState<boolean>(false);
-  const [newProjectModalOpen, setNewProjectModalOpen] = useState<boolean>(false);
+  const [newContainerModalOpen, setNewContainerModalOpen] = useState<boolean>(false);
 
 
   // specific content inside a project
@@ -57,7 +57,7 @@ export default function ProjectManager() {
     }
   }
 
-  
+ 
 
 
   
@@ -88,11 +88,30 @@ export default function ProjectManager() {
           projects={all_projects}
           active_project={active_project!}
           set_active_project={(project) => {
-            console.log("changing", project);
             set_active_project(project);
           }}
+          onUpdate={() => {
+            handleUpdateProjects()
+          }}
         />
-        
+        {!active_project ? (
+          <div className="flex-1 flex flex-col items-center justify-center p-6 sm:p-10 h-full overflow-hidden">
+            {/* Subtle Empty State Icon */}
+            <div className="w-20 h-20 mb-6 rounded-3xl bg-white/[0.02] border border-white/[0.05] flex items-center justify-center shadow-2xl backdrop-blur-md transition-all duration-500 hover:bg-white/[0.04]">
+              <div className="w-8 h-8 border-[1.5px] border-gray-600/60 rounded-lg border-dashed flex items-center justify-center">
+                <div className="w-3 h-[1.5px] bg-gray-600/60 rounded-full" />
+              </div>
+            </div>
+            
+            {/* Lighter Typography */}
+            <h1 className="text-2xl font-medium text-gray-300 tracking-wide mb-3">
+              No Active Project
+            </h1>
+            <p className="text-gray-500 font-light text-center max-w-sm leading-relaxed">
+              Select an existing project from the sidebar or create a new one to begin your work.
+            </p>
+          </div>
+        ):(
         <div className="flex-1 flex flex-col items-center p-6 sm:p-10 pb-32 h-full overflow-hidden">
           {/* --- Search & Sort Section --- */}
           <div className="w-full max-w-6xl flex flex-wrap sm:flex-nowrap items-center gap-3 mb-8">
@@ -118,15 +137,15 @@ export default function ProjectManager() {
               <Filter className="w-5 h-5 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
             </button>
 
-            {/* New Project Button */}
+            {/* New container Button */}
             <button className="px-5 py-3 rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:-translate-y-0.5 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-cyan-400/60 group flex items-center gap-2 border border-white/10"
               onClick={() => {
-                setNewProjectModalOpen(true)
+                setNewContainerModalOpen(true)
               }}
             >
               <Plus className="w-5 h-5 text-white group-hover:rotate-90 transition-transform duration-300" />
               <span className="text-white font-medium tracking-wide hidden sm:inline">
-                New Project
+                New Container
               </span>
             </button>
           </div>
@@ -192,17 +211,17 @@ export default function ProjectManager() {
               }}
             />
           )}
-          {newProjectModalOpen && (
-            <NewProject onClose={() => {
+          {newContainerModalOpen && (
+            <NewContainer onClose={() => {
               handleUpdateProjects()
-              setNewProjectModalOpen(false)
+              setNewContainerModalOpen(false)
             }}
             projects={all_projects}
             active_project={active_project}
             />
           )}
           <Chat />
-        </div>
+        </div>)};
       </div>
     </div>
   );
